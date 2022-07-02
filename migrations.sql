@@ -1,0 +1,3 @@
+alter table products add food_type tinyint default 1; 
+alter table branches add capacity int default 20;
+alter table branches add menu_image text default '[]';
