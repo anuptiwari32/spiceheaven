@@ -1127,4 +1127,10 @@
   'food' => 'Food',
   'veg' => 'Veg',
   'non-veg' => 'Non-veg',
+  'Title is too long' => 'Title is too long',
+  'Email is ready to register' => 'Email is ready to register',
+  'OTP verified!' => 'OTP verified!',
+  'OTP is not found!' => 'OTP is not found!',
+  'The first name field is required.' => 'The first name field is required.',
+  'The last name field is required.' => 'The last name field is required.',
 );
