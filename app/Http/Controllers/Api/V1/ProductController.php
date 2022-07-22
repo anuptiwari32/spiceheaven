@@ -28,6 +28,8 @@ class ProductController extends Controller
         return response()->json($products, 200);
     }
 
+    
+
     public function get_searched_products(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -84,10 +86,12 @@ class ProductController extends Controller
         ], 404);
     }
 
-    public function get_set_menus()
+    /** method to pull the list or set menu
+     * **/
+    public function get_set_menus(Request $request,$type=1)
     {
         try {
-            $products = Helpers::product_data_formatting(Product::active()->with(['rating'])->where(['set_menu' => 1, 'status' => 1])->latest()->get(), true);
+            $products = Helpers::product_data_formatting(Product::active()->with(['rating'])->where(['set_menu' => $type, 'status' => 1])->latest()->get(), true);
             return response()->json($products, 200);
         } catch (\Exception $e) {
             return response()->json([

@@ -1124,4 +1124,7 @@
   'Name is required!' => 'Name is required!',
   'Branch added successfully!' => 'Branch added successfully!',
   'Configuration updated successfully!' => 'Configuration updated successfully!',
+  'food' => 'Food',
+  'veg' => 'Veg',
+  'non-veg' => 'Non-veg',
 );

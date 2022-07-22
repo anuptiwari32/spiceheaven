@@ -15,7 +15,7 @@ class ProductLogic
 
     public static function get_latest_products($limit = 10, $offset = 1)
     {
-        $paginator = Product::active()->with(['rating'])->latest()->paginate($limit, ['*'], 'page', $offset);
+        $paginator = Product::active()->with(['rating'])->where('set_menu',0)->latest()->paginate($limit, ['*'], 'page', $offset);
         /*$paginator->count();*/
         return [
             'total_size' => $paginator->total(),
@@ -27,7 +27,7 @@ class ProductLogic
 
     public static function get_popular_products($limit = 10, $offset = 1)
     {
-        $paginator = Product::active()->with(['rating'])->orderBy('popularity_count', 'desc')->paginate($limit, ['*'], 'page', $offset);
+        $paginator = Product::active()->with(['rating'])->where('set_menu',0)->orderBy('popularity_count', 'desc')->paginate($limit, ['*'], 'page', $offset);
         /*$paginator->count();*/
         return [
             'total_size' => $paginator->total(),
@@ -37,6 +37,20 @@ class ProductLogic
         ];
     }
 
+    // public static function get_buffet_products($limit = 10)
+    // {
+    //     return Product::active()->with(['rating'])->whereHas('roles',function($role){
+    //         $role->where('name','employee');
+    //     })->orderBy('id', 'desc')->get();
+    //     // /*$paginator->count();*/
+    //     // return [
+    //     //     'total_size' => $paginator->total(),
+    //     //     'limit' => $limit,
+    //     //     'offset' => $offset,
+    //     //     'products' => $paginator->items()
+    //     // ];
+    // }
+    
     public static function get_related_products($product_id)
     {
         $product = Product::find($product_id);
@@ -49,7 +63,7 @@ class ProductLogic
     public static function search_products($name, $limit = 10, $offset = 1)
     {
         $key = explode(' ', $name);
-        $paginator = Product::active()->with(['rating'])->where(function ($q) use ($key) {
+        $paginator = Product::active()->with(['rating'])->whereIn('set_menu',[0,1])->where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('name', 'like', "%{$value}%");
             }

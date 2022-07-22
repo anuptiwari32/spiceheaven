@@ -119,7 +119,7 @@
                                     <select name="item_type" class="form-control js-select2-custom">
                                         <option value="0">{{translate('product')}} {{translate('item')}}</option>
                                         <option value="1">{{translate('set_menu')}}</option>
-                                        <option value="1">{{translate('buffet')}}</option>
+                                        <option value="2">{{translate('buffet')}}</option>
                                     </select>
                                 </div>
                             </div>
