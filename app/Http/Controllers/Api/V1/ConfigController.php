@@ -58,7 +58,7 @@ class ConfigController extends Controller
             'delivery_management' => $delivery_management,
             'cash_on_delivery' => $cod['status'] == 1 ? 'true' : 'false',
             'digital_payment' => $dp['status'] == 1 ? 'true' : 'false',
-            'branches' => Branch::all(['id', 'name', 'email', 'longitude', 'latitude', 'address', 'coverage']),
+            'branches' => Branch::all(['id', 'name', 'email', 'longitude', 'latitude', 'address', 'coverage','menu_image']),
             'terms_and_conditions' => BusinessSetting::where(['key' => 'terms_and_conditions'])->first()->value,
             'privacy_policy' => BusinessSetting::where(['key' => 'privacy_policy'])->first()->value,
             'about_us' => BusinessSetting::where(['key' => 'about_us'])->first()->value,

@@ -2,13 +2,64 @@
 
 namespace App\CentralLogics;
 
+
 use App\Model\Order;
 use App\Model\Product;
+use App\Model\TimeSchedule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class OrderLogic
 {
+    public static function availability($request)
+    {
+        $_booking=  DB::table('orders')
+        ->join('branches', 'branches.id', '=', 'orders.branch_id')
+        ->where('orders.delivery_date',$request->date)
+        ->where('orders.order_type','buffet')
+        ->where('delivery_time',$request->session)
+        ->where('branches.id',$request->branch_id)
+        ->groupBy('orders.delivery_time')
+        ->havingRaw('SUM(orders.capacity) > branches.capacity')
+        ->selectRaw('SUM(orders.capacity) as alloted, branches.capacity as available')
+        ->first();
+
+        return isset($_booking)&&$_booking->alloted < $_booking->available || !isset($_booking); 
+    }
+
+    public static function slots($request)
+    {
+        // $branch = Branch::find($request->branch_id);
+        // $restaurant_open_time = BusinessSetting::where(['key' => 'restaurant_open_time'])->first()->value;
+        // $restaurant_close_time = BusinessSetting::where(['key' => 'restaurant_close_time'])->first()->value;
+        $day = date('w',strtotime($request->date));
+        $slots = [];
+        $schedule = TimeSchedule::select('day', 'opening_time', 'closing_time')->where('day',$day)->first();
+        if(isset($schedule))
+        {
+            $start = strtotime($schedule->opening_time);
+            while($start < strtotime($schedule->opening_time))
+            {
+                $slot =date('h:i A',$start); 
+                $_booking=  DB::table('orders')
+                ->join('branches', 'branches.id', '=', 'orders.branch_id')
+                ->where('orders.delivery_date',$request->date)
+                ->where('orders.order_type','buffet')
+                ->where('delivery_time',$slot)
+                ->where('branches.id',$request->branch_id)
+                ->selectRaw('SUM(orders.capacity) as alloted, branches.capacity as available')
+                ->first();
+                if(isset($_booking)&&$_booking->alloted < $_booking->available || !isset($_booking))
+                $slots[] = $slot;
+                $start = $start+(30*60);
+            }
+        }
+
+        return $slots; 
+    }
+    
+
+
     public static function track_order($order_id)
     {
         return Helpers::order_data_formatting(Order::with(['details', 'delivery_man.rating'])->where(['id' => $order_id])->first(), false);

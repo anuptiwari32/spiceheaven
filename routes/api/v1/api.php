@@ -100,6 +100,13 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::get('track', 'OrderController@track_order');
             Route::put('payment-method', 'OrderController@update_payment_method');
         });
+
+        Route::group(['prefix' => 'book'], function () {
+            Route::post('check_availability', 'BookATableController@check_availability');
+            Route::post('check_slots', 'BookATableController@check_slots');
+            Route::post('place ', 'BookATableController@create');
+         
+        });
         // Chatting
         Route::group(['prefix' => 'message'], function () {
             //customer-admin

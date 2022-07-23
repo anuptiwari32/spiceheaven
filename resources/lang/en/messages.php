@@ -1068,6 +1068,8 @@
   'Role name is required!' => 'Role name is required!',
   'Role updated successfully!' => 'Role updated successfully!',
   'order_success' => 'Order success',
+  'booking_success' => 'Booking Confirmed',
+  'slot_unavailable' => 'Slot Unavailable',
   'Update delivery-man' => 'Update delivery-man',
   'update Deliveryman' => 'Update Deliveryman',
   'images' => 'Images',

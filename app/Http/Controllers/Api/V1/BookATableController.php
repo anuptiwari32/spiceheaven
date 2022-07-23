@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\CentralLogics\Helpers;
-use App\Model\CustomerAddress;
+use App\CentralLogics\OrderLogic;
+use App\Http\Controllers\Controller;
 use App\Model\Order;
 use App\Model\Product;
 use Carbon\Carbon;
@@ -14,6 +15,47 @@ use Illuminate\Support\Facades\Validator;
 
 class BookATableController extends Controller
 {
+
+    public function check_availability(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'branch_id' => 'required',
+                'session' => 'required',
+                'date' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+            }
+                return response()->json(OrderLogic::availability($request), 200);      
+            } catch (\Throwable $th) {
+                return response()->json([$th], 403);
+
+            //throw $th;
+        }
+    }
+
+    public function check_slots(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'branch_id' => 'required',
+                'session' => 'required',
+                'date' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+            }
+                return response()->json(OrderLogic::slots($request), 200);      
+            } catch (\Throwable $th) {
+                return response()->json([$th], 403);
+
+            //throw $th;
+        }
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -61,22 +103,21 @@ class BookATableController extends Controller
                 'order_amount' => Helpers::set_price($request['order_amount']),
                 'coupon_discount_amount' => Helpers::set_price($request->coupon_discount_amount),
                 'coupon_discount_title' => $request->coupon_discount_title == 0 ? null : 'coupon_discount_title',
-                'payment_status' => ($request->payment_method=='cash_on_delivery')?'unpaid':'paid',
-                'order_status' => ($request->payment_method=='cash_on_delivery')?'pending':'confirmed',
+                'payment_status' => 'unpaid',
+                'order_status' => 'confirmed',
                 'coupon_code' => $request['coupon_code'],
                 'payment_method' => $request->payment_method,
                 'transaction_reference' => $request->transaction_reference ?? null,
                 'order_note' => $request['order_note'],
                 'order_type' => $request['order_type'],
                 'branch_id' => $request['branch_id'],
-                'delivery_address_id' => $request->delivery_address_id,
-
+                'delivery_address_id' => null,
                 'delivery_date' => $del_date,
                 'delivery_time' => $del_time,
-                'delivery_address' => json_encode(CustomerAddress::find($request->delivery_address_id) ?? null),
-                'delivery_charge' => Helpers::get_delivery_charge($request['distance']),
-                'preparation_time' => Helpers::get_business_settings('default_preparation_time') ?? 0,
-
+                'delivery_address' => json_encode(null),
+                'delivery_charge' => 0,
+                'capacity'=>$request->capacity,
+                'preparation_time' =>  0,
                 'created_at' => now(),
                 'updated_at' => now()
             ];
@@ -90,6 +131,8 @@ class BookATableController extends Controller
                 } else {
                     $price = Helpers::set_price($product['price']);
                 }
+                //                $capacity += $c['quantity'];
+
                 $or_d = [
                     'order_id' => $o_id,
                     'product_id' => $c['product_id'],
@@ -114,7 +157,7 @@ class BookATableController extends Controller
             }
 
             $fcm_token = $request->user()->cm_firebase_token;
-            $value = Helpers::order_status_update_message(($request->payment_method=='cash_on_delivery')?'pending':'confirmed');
+            $value = Helpers::order_status_update_message('pending');
             try {
                 //send push notification
                 if ($value) {
@@ -139,11 +182,11 @@ class BookATableController extends Controller
             }
 
             return response()->json([
-                'message' => translate('order_success'),
+                'message' => translate('booking_success'),
                 'order_id' => $o_id
             ], 200);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return response()->json([$e], 403);
         }
 
