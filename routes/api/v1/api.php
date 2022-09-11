@@ -79,6 +79,11 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::get('products/{category_id}/all', 'CategoryController@get_all_products');
     });
 
+    Route::group(['prefix' => 'book'], function () {
+        Route::post('check-availability', 'BookATableController@check_availability');
+        Route::post('check-slots', 'BookATableController@check_slots');
+    });
+    
     Route::group(['prefix' => 'customer', 'middleware' => 'auth:api'], function () {
         Route::get('info', 'CustomerController@info');
         Route::put('update-profile', 'CustomerController@update_profile');
@@ -102,8 +107,6 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         });
 
         Route::group(['prefix' => 'book'], function () {
-            Route::post('check_availability', 'BookATableController@check_availability');
-            Route::post('check_slots', 'BookATableController@check_slots');
             Route::post('place ', 'BookATableController@create');
          
         });
