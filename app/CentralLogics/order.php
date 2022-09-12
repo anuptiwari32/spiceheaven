@@ -13,18 +13,19 @@ class OrderLogic
 {
     public static function availability($request)
     {
+        $branch = Branch::find($request->branch_id); // also check if restaurant is open ??
         $_booking=  DB::table('orders')
-        ->join('branches', 'branches.id', '=', 'orders.branch_id')
+        //->join('orders', 'branches.id', '=', 'orders.branch_id')
         ->where('orders.delivery_date',$request->date)
         ->where('orders.order_type','buffet')
-        ->where('delivery_time',$request->session)
-        ->where('branches.id',$request->branch_id)
+        ->where('orders.delivery_time',$request->session)
+        ->where('orders.branch_id',$request->branch_id)
         ->groupBy('orders.delivery_time')
-        ->havingRaw('SUM(orders.capacity) > branches.capacity')
-        ->selectRaw('SUM(orders.capacity) as alloted, branches.capacity as available')
+        ->havingRaw("SUM(orders.capacity) >=  {$branch->capacity} ")
+        ->selectRaw('SUM(orders.capacity) as alloted')
         ->first();
 
-        return isset($_booking)&&$_booking->alloted < $_booking->available || !isset($_booking); 
+        return ( (isset($_booking)&& ((isset($_booking->alloted)&& $_booking->alloted < $branch->capacity)|| !isset($_booking->alloted)) ) || !isset($_booking));
     }
 
     public static function slots($request)
@@ -38,7 +39,7 @@ class OrderLogic
         if(isset($schedule))
         {
             $start = strtotime($schedule->opening_time);
-            $branch = Branch::find($request->branch_id);
+            $branch = Branch::find($request->branch_id); // also check if restaurant is open ??
             $recu = strtotime($schedule->opening_time);
             while($start <= strtotime($schedule->closing_time))
             {
