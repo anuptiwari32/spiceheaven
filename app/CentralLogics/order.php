@@ -2,7 +2,7 @@
 
 namespace App\CentralLogics;
 
-
+use App\Model\Branch;
 use App\Model\Order;
 use App\Model\Product;
 use App\Model\TimeSchedule;
@@ -38,18 +38,21 @@ class OrderLogic
         if(isset($schedule))
         {
             $start = strtotime($schedule->opening_time);
-            while($start < strtotime($schedule->opening_time))
+            $branch = Branch::find($request->branch_id);
+            $recu = strtotime($schedule->opening_time);
+            while($start <= strtotime($schedule->closing_time))
             {
                 $slot =date('h:i A',$start); 
-                $_booking=  DB::table('orders')
-                ->join('branches', 'branches.id', '=', 'orders.branch_id')
+                $_booking=  DB::table('branches')
+                ->join('orders', 'branches.id', '=', 'orders.branch_id', 'left')
                 ->where('orders.delivery_date',$request->date)
                 ->where('orders.order_type','buffet')
-                ->where('delivery_time',$slot)
+                ->where('orders.delivery_time',$slot)
                 ->where('branches.id',$request->branch_id)
-                ->selectRaw('SUM(orders.capacity) as alloted, branches.capacity as available')
+                ->selectRaw('SUM(orders.capacity) as alloted')
+                //->groupBy('branches.capacity')
                 ->first();
-                if(isset($_booking)&&$_booking->alloted < $_booking->available || !isset($_booking))
+                if( (isset($_booking)&& ((isset($_booking->alloted)&& $_booking->alloted < $branch->capacity)|| !isset($_booking->alloted)) ) || !isset($_booking))
                 $slots[] = $slot;
                 $start = $start+(30*60);
             }
