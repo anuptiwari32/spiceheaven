@@ -188,6 +188,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-2 d-none" id="items_div">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="input-label" for="exampleFormControlSelect1">{{translate('items')}}<span
+                                            class="input-label-secondary"></span></label>
+                                    <select name="items[]" class="form-control js-select2-custom" multiple="multiple">
+                                        @foreach(\App\Model\Product::where('set_menu',1)->orderBy('name')->get() as $product)
+                                            <option
+                                                value="{{$product['id']}}" >{{$product['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row mt-2">
                             <div class="col-12">
@@ -303,6 +317,13 @@
 
 
         })
+        $('select[name="item_type"]').on('change',function(){
+            if($(this).val()==2)
+            {
+                $('#items_div').removeClass('d-none');
+            }else  
+            $('#items_div').addClass('d-none');
+        });
     </script>
 
     <script>

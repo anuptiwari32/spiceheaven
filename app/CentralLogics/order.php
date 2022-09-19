@@ -55,7 +55,7 @@ class OrderLogic
                 ->first();
                 if( (isset($_booking)&& ((isset($_booking->alloted)&& $_booking->alloted < $branch->capacity)|| !isset($_booking->alloted)) ) || !isset($_booking))
                 $slots[] = $slot;
-                $start = $start+(30*60);
+                $start = $start+(15*60);
             }
         }
 

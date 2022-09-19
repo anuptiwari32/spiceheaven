@@ -24,7 +24,6 @@ class BookATableController extends Controller
                 'session' => 'required',
                 'date' => 'required'
             ]);
-    
             if ($validator->fails()) {
                 return response()->json(['errors' => Helpers::error_processor($validator)], 403);
             }

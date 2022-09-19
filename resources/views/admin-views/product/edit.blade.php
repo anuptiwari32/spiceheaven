@@ -141,6 +141,8 @@
                                     <select name="item_type" class="form-control js-select2-custom">
                                         <option value="0" {{$product['set_menu']==0?'selected':''}}>{{translate('product')}} {{translate('item')}}</option>
                                         <option value="1" {{$product['set_menu']==1?'selected':''}}>{{translate('set_menu')}}</option>
+                                        <option value="2" {{$product['set_menu']==2?'selected':''}}>{{translate('buffet')}}</option>
+
                                     </select>
                                 </div>
                             </div>
@@ -208,6 +210,21 @@
                             <div class="col-md-12 mt-2 mb-2">
                                 <div class="variant_combination" id="variant_combination">
                                     @include('admin-views.product.partials._edit-combinations',['combinations'=>json_decode($product['variations'],true)])
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2 {{$product['set_menu']!='2'?'':'d-none'}}" id="items_div">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="input-label" for="exampleFormControlSelect1">{{translate('items')}}<span
+                                            class="input-label-secondary"></span></label>
+                                    <select name="items[]" class="form-control js-select2-custom" multiple="multiple">
+                                        @foreach(\App\Model\Product::where('set_menu',1)->orderBy('name')->get() as $product)
+                                            <option
+                                                value="{{$product['id']}}" {{in_array($product->id,json_decode($product['items'],true))?'selected':''}}>{{$product['name']}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -425,6 +442,13 @@
                 }
             });
         }
+        $('select[name="item_type"]').on('change',function(){
+            if($(this).val()==2)
+            {
+                $('#items_div').removeClass('d-none');
+            }else  
+            $('#items_div').addClass('d-none');
+        });
     </script>
 
 {{--    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>--}}

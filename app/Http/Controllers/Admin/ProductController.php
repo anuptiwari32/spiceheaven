@@ -219,6 +219,8 @@ class ProductController extends Controller
         }
         //combinations end
         $product->variations = json_encode($variations);
+        $product->items = $request->has('items') ? json_encode($request->items) : json_encode([]);
+
         $product->price = $request->price;
         $product->set_menu = $request->item_type;
         $product->food_type = $request->food_type;
@@ -378,6 +380,7 @@ class ProductController extends Controller
         }
         //combinations end
         $product->variations = json_encode($variations);
+        $product->items = $request->has('items') ? json_encode($request->items) : json_encode([]);
         $product->price = $request->price;
         $product->set_menu = $request->item_type;
         $product->food_type = $request->food_type;

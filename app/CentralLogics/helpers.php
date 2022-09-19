@@ -8,6 +8,7 @@ use App\Model\BusinessSetting;
 use App\Model\Currency;
 use App\Model\DMReview;
 use App\Model\Order;
+use App\Model\Product;
 use App\Model\Review;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
@@ -66,6 +67,7 @@ class Helpers
                 $item['attributes'] = json_decode($item['attributes']);
                 $item['choice_options'] = json_decode($item['choice_options']);
                 $item['add_ons'] = AddOn::whereIn('id', json_decode($item['add_ons']))->get();
+                $item['products'] = Product::whereIn('id', json_decode($item['items']))->get();
                 foreach (json_decode($item['variations'], true) as $var) {
                     array_push($variations, [
                         'type' => $var['type'],
@@ -94,6 +96,7 @@ class Helpers
             $data['attributes'] = json_decode($data['attributes']);
             $data['choice_options'] = json_decode($data['choice_options']);
             $data['add_ons'] = AddOn::whereIn('id', json_decode($data['add_ons']))->get();
+            $item['products'] = Product::whereIn('id', json_decode($data['items']))->get();
             foreach (json_decode($data['variations'], true) as $var) {
                 array_push($variations, [
                     'type' => $var['type'],
