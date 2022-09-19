@@ -67,7 +67,12 @@ class Helpers
                 $item['attributes'] = json_decode($item['attributes']);
                 $item['choice_options'] = json_decode($item['choice_options']);
                 $item['add_ons'] = AddOn::whereIn('id', json_decode($item['add_ons']))->get();
-                $item['products'] = Product::whereIn('id', json_decode($item['items']))->get();
+                if(count(json_decode($item['items']))>0)
+                {                 
+                    $item['products'] = self::product_data_formatting(Product::whereIn('id', json_decode($item['items']))->get(),true);
+                }
+                else  $item['products'] = [];
+
                 foreach (json_decode($item['variations'], true) as $var) {
                     array_push($variations, [
                         'type' => $var['type'],
@@ -96,7 +101,12 @@ class Helpers
             $data['attributes'] = json_decode($data['attributes']);
             $data['choice_options'] = json_decode($data['choice_options']);
             $data['add_ons'] = AddOn::whereIn('id', json_decode($data['add_ons']))->get();
-            $item['products'] = Product::whereIn('id', json_decode($data['items']))->get();
+            if(count(json_decode($data['items']))>0)
+            {                 
+                $item['products'] = self::product_data_formatting(Product::whereIn('id', json_decode($item['items']))->get(),true);
+            }
+            else
+            $item['products'] = [];
             foreach (json_decode($data['variations'], true) as $var) {
                 array_push($variations, [
                     'type' => $var['type'],
