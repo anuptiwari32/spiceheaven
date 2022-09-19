@@ -194,7 +194,7 @@
                                     <label class="input-label" for="exampleFormControlSelect1">{{translate('items')}}<span
                                             class="input-label-secondary"></span></label>
                                     <select name="items[]" class="form-control js-select2-custom" multiple="multiple">
-                                        @foreach(\App\Model\Product::where('set_menu',1)->orderBy('name')->get() as $product)
+                                        @foreach(\App\Model\Product::where('set_menu',0)->orderBy('name')->get() as $product)
                                             <option
                                                 value="{{$product['id']}}" >{{$product['name']}}</option>
                                         @endforeach

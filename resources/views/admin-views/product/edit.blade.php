@@ -214,13 +214,13 @@
                             </div>
                         </div>
 
-                        <div class="row mt-2 {{$product['set_menu']!='2'?'':'d-none'}}" id="items_div">
+                        <div class="row mt-2 {{$product['set_menu']==2?'':'d-none'}}" id="items_div">
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="input-label" for="exampleFormControlSelect1">{{translate('items')}}<span
                                             class="input-label-secondary"></span></label>
                                     <select name="items[]" class="form-control js-select2-custom" multiple="multiple">
-                                        @foreach(\App\Model\Product::where('set_menu',1)->orderBy('name')->get() as $product)
+                                        @foreach(\App\Model\Product::where('set_menu',0)->orderBy('name')->get() as $product)
                                             <option
                                                 value="{{$product['id']}}" {{in_array($product->id,json_decode($product['items'],true))?'selected':''}}>{{$product['name']}}</option>
                                         @endforeach
