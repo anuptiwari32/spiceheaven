@@ -591,6 +591,36 @@
                                             <span class="text-truncate">{{translate('privacy_policy')}}</span>
                                         </a>
                                     </li>
+                                     <!-- return page -->
+                                     <li class="navbar-vertical-aside-has-menu {{Request::is('admin/business-settings/page-setup/return-page*')?'active':''}}">
+                                        <a class="nav-link "
+                                           href="{{route('admin.business-settings.page-setup.return_page_index')}}"
+                                           title="{{\App\CentralLogics\translate('Return policy')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span
+                                                class="text-truncate">{{\App\CentralLogics\translate('Return policy')}}</span>
+                                        </a>
+                                    </li>
+                                    <!-- refund page -->
+                                    <li class="navbar-vertical-aside-has-menu {{Request::is('admin/business-settings/page-setup/refund-page*')?'active':''}}">
+                                        <a class="nav-link "
+                                           href="{{route('admin.business-settings.page-setup.refund_page_index')}}"
+                                           title="{{\App\CentralLogics\translate('Refund policy')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span
+                                                class="text-truncate">{{\App\CentralLogics\translate('Refund policy')}}</span>
+                                        </a>
+                                    </li>
+                                    <!-- cancellation page -->
+                                    <li class="navbar-vertical-aside-has-menu {{Request::is('admin/business-settings/page-setup/cancellation-page*')?'active':''}}">
+                                        <a class="nav-link "
+                                           href="{{route('admin.business-settings.page-setup.cancellation_page_index')}}"
+                                           title="{{\App\CentralLogics\translate('Cancellation policy')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span
+                                                class="text-truncate">{{\App\CentralLogics\translate('Cancellation policy')}}</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif

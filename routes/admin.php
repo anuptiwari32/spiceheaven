@@ -300,6 +300,17 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
                 Route::get('about-us', 'BusinessSettingsController@about_us')->name('about-us')->middleware('actch');
                 Route::post('about-us', 'BusinessSettingsController@about_us_update')->middleware('actch');
+
+                
+                //pages
+                Route::get('return-page', 'BusinessSettingsController@return_page_index')->name('return_page_index');
+                Route::post('return-page-update', 'BusinessSettingsController@return_page_update')->name('return_page_update');
+
+                Route::get('refund-page', 'BusinessSettingsController@refund_page_index')->name('refund_page_index');
+                Route::post('refund-page-update', 'BusinessSettingsController@refund_page_update')->name('refund_page_update');
+
+                Route::get('cancellation-page', 'BusinessSettingsController@cancellation_page_index')->name('cancellation_page_index');
+                Route::post('cancellation-page-update', 'BusinessSettingsController@cancellation_page_update')->name('cancellation_page_update');
             });
 
 

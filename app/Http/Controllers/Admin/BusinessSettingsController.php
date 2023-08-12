@@ -605,6 +605,115 @@ class BusinessSettingsController extends Controller
         Toastr::success(translate('About us updated!'));
         return back();
     }
+    //return page
+    public function return_page_index(Request $request)
+    {
+        $data = BusinessSetting::where(['key' => 'return_page'])->first();
+
+        if ($data == false) {
+            $data = [
+                'key' => 'return_page',
+                'value' => json_encode([
+                    'status' => 0,
+                    'content' => ''
+                ]),
+            ];
+            BusinessSetting::insert($data);
+        }
+
+        return view('admin-views.business-settings.return_page-index',compact('data'));
+    }
+
+    public function return_page_update(Request $request)
+    {
+        DB::table('business_settings')->updateOrInsert(['key' => 'return_page'], [
+            'key' => 'return_page',
+            'value' => json_encode([
+                'status' => $request['status']== 1 ? 1 : 0,
+                'content' => $request['content']
+            ]),
+            'created_at' => now(),
+            'updated_at' => now(),
+
+        ]);
+
+        Toastr::success(translate('Updated Successfully'));
+        return back();
+    }
+
+     //refund page
+    public function refund_page_index(Request $request)
+    {
+        $data = BusinessSetting::where(['key' => 'refund_page'])->first();
+
+        if ($data == false) {
+            $data = [
+                'key' => 'refund_page',
+                'value' => json_encode([
+                    'status' => 0,
+                    'content' => ''
+                ]),
+            ];
+            BusinessSetting::insert($data);
+        }
+        return view('admin-views.business-settings.refund_page-index',compact('data'));
+    }
+
+    public function refund_page_update(Request $request)
+    {
+        //dd($request->all());
+        DB::table('business_settings')->updateOrInsert(['key' => 'refund_page'], [
+            'key' => 'refund_page',
+            'value' => json_encode([
+                'status' => $request['status']==1 ? 1 : 0,
+                'content' => $request['content']==null ? null : $request['content']
+            ]),
+            'created_at' => now(),
+            'updated_at' => now(),
+
+        ]);
+
+
+        Toastr::success(translate('Updated Successfully'));
+        return back();
+    }
+
+
+     //cancellation page
+     public function cancellation_page_index(Request $request)
+     {
+         $data = BusinessSetting::where(['key' => 'cancellation_page'])->first();
+
+         if ($data == false) {
+             $data = [
+                 'key' => 'cancellation_page',
+                 'value' => json_encode([
+                    'status' => 0,
+                    'content' => ''
+                ]),
+             ];
+             BusinessSetting::insert($data);
+         }
+
+         return view('admin-views.business-settings.cancellation_page-index',compact('data'));
+     }
+
+     public function cancellation_page_update(Request $request)
+     {
+         DB::table('business_settings')->updateOrInsert(['key' => 'cancellation_page'], [
+             'key' => 'cancellation_page',
+             'value' => json_encode([
+                 'status' => $request['status']==1 ? 1 : 0,
+                 'content' => $request['content']
+             ]),
+             'created_at' => now(),
+             'updated_at' => now(),
+
+         ]);
+
+         Toastr::success(translate('Updated Successfully'));
+         return back();
+     }
 
     public function fcm_index()
     {
