@@ -221,4 +221,18 @@ class CustomerAuthController extends Controller
         ], 401);
 
     }
+    
+    public function remove_account(Request $request)
+    {
+        $customer = User::find($request->user()->id);
+
+        if(isset($customer)) {
+            Helpers::file_remover('customer/', $customer->image);
+            $customer->delete();
+        } else {
+            return response()->json(['status_code' => 404, 'message' => translate('Not found')], 200);
+        }
+        return response()->json(['status_code' => 200, 'message' => translate('Successfully deleted')], 200);
+    }
+
 }

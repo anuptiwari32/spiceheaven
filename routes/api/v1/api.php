@@ -89,7 +89,10 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::put('update-profile', 'CustomerController@update_profile');
         Route::put('cm-firebase-token', 'CustomerController@update_cm_firebase_token');
         Route::get('transaction-history', 'CustomerController@get_transaction_history');
-
+        
+        Route::namespace('Auth')->group(function () {
+            Route::delete('remove-account', 'CustomerAuthController@remove_account');
+        });
         Route::group(['prefix' => 'address'], function () {
             Route::get('list', 'CustomerController@address_list');
             Route::post('add', 'CustomerController@add_new_address');
