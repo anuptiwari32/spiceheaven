@@ -62,73 +62,64 @@ class Helpers
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
-                $variations = [];
-                $item['category_ids'] = json_decode($item['category_ids']);
-                $item['attributes'] = json_decode($item['attributes']);
-                $item['choice_options'] = json_decode($item['choice_options']);
-                $item['add_ons'] = AddOn::whereIn('id', json_decode($item['add_ons']))->get();
-                if(count(json_decode($item['items']))>0)
-                {                 
-                    $item['products'] = self::product_data_formatting(Product::whereIn('id', json_decode($item['items']))->get(),true);
-                }
-                else  $item['products'] = [];
-
-                foreach (json_decode($item['variations'], true) as $var) {
-                    array_push($variations, [
-                        'type' => $var['type'],
-                        'price' => (double)$var['price']
-                    ]);
-                }
-                $item['variations'] = $variations;
-
-                if (count($item['translations'])) {
-                    foreach ($item['translations'] as $translation) {
-                        if ($translation->key == 'name') {
-                            $item['name'] = $translation->value;
-                        }
-                        if ($translation->key == 'description') {
-                            $item['description'] = $translation->value;
-                        }
-                    }
-                }
+                $item =  (new Helpers)->getItemDetails($item);
                 unset($item['translations']);
                 array_push($storage, $item);
             }
             $data = $storage;
         } else {
-            $variations = [];
-            $data['category_ids'] = json_decode($data['category_ids']);
-            $data['attributes'] = json_decode($data['attributes']);
-            $data['choice_options'] = json_decode($data['choice_options']);
-            $data['add_ons'] = AddOn::whereIn('id', json_decode($data['add_ons']))->get();
-            if(count(json_decode($data['items']))>0)
-            {                 
-                $item['products'] = self::product_data_formatting(Product::whereIn('id', json_decode($item['items']))->get(),true);
-            }
-            else
-            $item['products'] = [];
-            foreach (json_decode($data['variations'], true) as $var) {
-                array_push($variations, [
-                    'type' => $var['type'],
-                    'price' => (double)$var['price']
-                ]);
-            }
-            $data['variations'] = $variations;
-            if (count($data['translations']) > 0) {
-                foreach ($data['translations'] as $translation) {
-                    if ($translation->key == 'name') {
-                        $data['name'] = $translation->value;
-                    }
-                    if ($translation->key == 'description') {
-                        $data['description'] = $translation->value;
-                    }
-                }
-            }
+            $data = (new Helpers)->getItemDetails($data);
         }
-
-        return $data;
+        return $data;   
     }
 
+    private function getItemDetails($item)
+    {
+                    $variations = [];
+                    $data_addons = $item['add_ons'];
+                    $addon_ids = [];
+                    if(gettype($data_addons) != 'array') {
+                        $addon_ids = json_decode($data_addons);
+        
+                    } elseif(gettype($data_addons) == 'array' && isset($data_addons[0]['id'])) {
+                        foreach($data_addons as $addon) {
+                            $addon_ids[] = $addon['id'];
+                        }
+        
+                    } else {
+                        $addon_ids = $data_addons;
+                    }
+                    
+                    $item['category_ids'] = json_decode($item['category_ids']);
+                    $item['attributes'] = json_decode($item['attributes']);
+                    $item['choice_options'] = json_decode($item['choice_options']);
+                    $item['add_ons'] = AddOn::whereIn('id', $addon_ids)->get();
+                    if(count(json_decode($item['items']))>0)
+                    {                 
+                        $item['products'] = self::product_data_formatting(Product::whereIn('id', json_decode($item['items']))->get(),true);
+                    }
+                    else  $item['products'] = [];
+
+                    foreach (json_decode($item['variations'], true) as $var) {
+                        array_push($variations, [
+                            'type' => $var['type'],
+                            'price' => (double)$var['price']
+                        ]);
+                    }
+                    $item['variations'] = $variations;
+
+                    if (count($item['translations'])) {
+                        foreach ($item['translations'] as $translation) {
+                            if ($translation->key == 'name') {
+                                $item['name'] = $translation->value;
+                            }
+                            if ($translation->key == 'description') {
+                                $item['description'] = $translation->value;
+                            }
+                        }
+                    }
+                    return $item;
+    }
     public static function order_data_formatting($data, $multi_data = false)
     {
         $storage = [];
