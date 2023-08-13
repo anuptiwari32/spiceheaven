@@ -148,6 +148,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
     });
 
     Route::post('subscribe-newsletter', 'CustomerController@subscribe_newsletter');
+    
+    Route::get('pages', 'PageController@index');
+
 });
 
-Route::get('pages', 'PageController@index');
