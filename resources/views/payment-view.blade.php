@@ -104,7 +104,7 @@
                                         </script>
                                     </form>
                                     <button class="btn btn-block click-if-alone" type="button"
-                                            onclick="{{\App\CentralLogics\Helpers::currency_code()=='INR'?"$('.razorpay-payment-button').click()":"toastr.error('Your currency is not supported by Razor Pay.')"}}">
+                                            onclick="{{\App\CentralLogics\Helpers::currency_code()=='INR'?"$(this).prev().submit()":"toastr.error('Your currency is not supported by Razor Pay.')"}}">
                                         <img width="100"
                                              src="{{asset('public/assets/admin/img/razorpay.png')}}"/>
                                     </button>
@@ -645,7 +645,7 @@
         let total = $('.checkout_details .click-if-alone').length;
         if (Number.parseInt(total) < 2) {
             $('.click-if-alone').click()
-            $('.checkout_details').html('<div class="text-center"><h1>{{translate('Redirecting_to_the_payment_page')}}......</h1></div>');
+           // $('.checkout_details').html('<div class="text-center"><h1>{{translate('Redirecting_to_the_payment_page')}}......</h1></div>');
         }
     }
     @if(!$errors->any())

@@ -1135,4 +1135,8 @@
   'OTP is not found!' => 'OTP is not found!',
   'The first name field is required.' => 'The first name field is required.',
   'The last name field is required.' => 'The last name field is required.',
+  'Return policy' => 'Return policy',
+  'Refund policy' => 'Refund policy',
+  'Cancellation policy' => 'Cancellation policy',
+  'payment settings updated!' => 'Payment settings updated!',
 );

@@ -22,6 +22,15 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');*/
 
+Route::get('/cache-clear', function() {
+    //$exitCode0 = Artisan::call('route:cache'); // Commented cus error constant.php already defined
+    //$exitCode1 = Artisan::call('config:cache');
+    $exitCode2 = Artisan::call('config:clear');
+    $exitCode3 = Artisan::call('cache:clear');
+    $exitCode4 = Artisan::call('view:clear');
+    return "All cache cleaned :: cache | view";
+});
+
 Route::get('/', function () {
     return redirect(\route('admin.dashboard'));
 });
